@@ -1,0 +1,116 @@
+﻿@model CodeChallenge.Models.Client
+@{
+    ViewData["Title"] = "Adicionar Cliente";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Nome">Nome:</label>
+        <input asp-for="Nome" class="form-control" />
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">Email:</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Fone">Telefone:</label>
+        <input asp-for="Fone" class="form-control" />
+        <span asp-validation-for="Fone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Tipo">Tipo:</label>
+        <select asp-for="Tipo" class="form-control" id="tipoSelect">
+            <option value="Fisica">Física</option>
+            <option value="Juridica">Jurídica</option>
+        </select>
+        <span asp-validation-for="Tipo" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CpfOuCnpj">CPF/CNPJ:</label>
+        <input asp-for="CpfOuCnpj" class="form-control" />
+        <span asp-validation-for="CpfOuCnpj" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Insento">Isento:</label>
+        <input asp-for="Insento" class="form-check-input" type="checkbox" />
+        <span asp-validation-for="Insento" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Inscricao">Inscrição:</label>
+        <input asp-for="Inscricao" class="form-control" />
+        <span asp-validation-for="Inscricao" class="text-danger"></span>
+    </div>
+    <div class="form-group" id="generoGroup">
+        <label asp-for="Genero">Gênero:</label>
+        <select asp-for="Genero" class="form-control">
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+        </select>
+        <span asp-validation-for="Genero" class="text-danger"></span>
+    </div>
+    <div class="form-group" id="dataNascimentoGroup">
+        <label asp-for="DataNascimento">Data de Nascimento:</label>
+        <input asp-for="DataNascimento" class="form-control" type="date" />
+        <span asp-validation-for="DataNascimento" class="text-danger"></span>
+    </div>
+    <div class="form-group" id="clientBlockedGroup">
+        <label asp-for="ClientBlocked">Cliente Bloqueado:</label>
+        <input asp-for="ClientBlocked" class="form-check-input" type="checkbox" />
+        <span asp-validation-for="ClientBlocked" class="text-danger"></span>
+    </div>
+
+     <div class="form-group" id="senhaGroup">
+        <label asp-for="Senha" data-toggle="tooltip" title="Cadastre a senha de acesso do seu Cliente">Senha:</label>
+        <input id="senha" asp-for="Senha" class="form-control" type="password" />
+        <span asp-validation-for="Senha" class="text-danger"></span>
+    </div>
+
+    <div class="form-group" id="confirmacaoSenhaGroup">
+        <label asp-for="ConfirmacaoSenha" data-toggle="tooltip" title="Confirme a senha de acesso do seu Cliente">Confirme a senha:</label>
+        <input id="confirmacaoSenha" asp-for="ConfirmacaoSenha" class="form-control" type="password" />
+        <small id="confirmacaoSenhaWarning" class="form-text text-warning"></small>
+    </div>
+
+    <input type="hidden" asp-for="DataRegistro" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+
+    <p></p>
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+</form>
+
+<script>
+    function toggleFields() {
+        var tipoSelect = document.getElementById("tipoSelect");
+        var generoGroup = document.getElementById("generoGroup");
+        var dataNascimentoGroup = document.getElementById("dataNascimentoGroup");
+        var clientBlockedGroup = document.getElementById("clientBlockedGroup");
+        var senhaGroup = document.getElementById("senhaGroup");
+        var confirmacaoSenhaGroup = document.getElementById("confirmacaoSenhaGroup");
+
+        if (tipoSelect.value === "Fisica") {
+            generoGroup.style.display = "block";
+            dataNascimentoGroup.style.display = "block";
+            clientBlockedGroup.style.display = "block";
+            senhaGroup.style.display = "block";
+            confirmacaoSenhaGroup.style.display = "block";
+
+            document.getElementById("senha").setAttribute("required", "required");
+            document.getElementById("confirmacaoSenha").setAttribute("required", "required");
+        } else {
+            generoGroup.style.display = "none";
+            dataNascimentoGroup.style.display = "none";
+            clientBlockedGroup.style.display = "none";
+            senhaGroup.style.display = "none";
+            confirmacaoSenhaGroup.style.display = "none";
+
+            document.getElementById("senha").removeAttribute("required");
+            document.getElementById("confirmacaoSenha").removeAttribute("required");
+        }
+    }
+
+    document.getElementById("tipoSelect").addEventListener("change", toggleFields);
+    window.onload = toggleFields;
+</script>

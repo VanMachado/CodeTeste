@@ -1,4 +1,6 @@
 using CodeChallenge.Data;
+using CodeChallenge.Service;
+using CodeChallenge.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,7 @@ builder.Services.AddDbContext<MySqlContext>(opt =>
     opt.UseMySql(builder.Configuration.GetConnectionString("MySqlContext"),
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySqlContext"))));
 builder.Services.AddScoped<SeedingService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 var app = builder.Build();
 
