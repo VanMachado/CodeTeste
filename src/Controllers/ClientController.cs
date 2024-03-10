@@ -1,4 +1,5 @@
 ﻿using CodeChallenge.Models;
+using CodeChallenge.Models.Dto;
 using CodeChallenge.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ public class ClientController : Controller
         int pageSize = 20;
         var clients = await _service.Findall();
 
-        return View(Paging<Client>.Create(clients, pageNumber ?? 1, pageSize));
+        return View(Paging<ClientDto>.Create(clients, pageNumber ?? 1, pageSize));
     }
 
     [HttpGet]
@@ -28,7 +29,7 @@ public class ClientController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<Client>> Create(Client client)
+    public async Task<ActionResult<Client>> Create(ClientDto client)
     {
         if (client == null)
             return BadRequest();
@@ -57,7 +58,7 @@ public class ClientController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit (Client client)
+    public async Task<IActionResult> Edit (ClientDto client)
     {
         await _service.Update(client);
 

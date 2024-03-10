@@ -1,5 +1,7 @@
-﻿using CodeChallenge.Data;
+﻿using AutoMapper;
+using CodeChallenge.Data;
 using CodeChallenge.Models;
+using CodeChallenge.Models.Dto;
 using CodeChallenge.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,58 +10,85 @@ namespace CodeChallenge.Service
     public class ClientService : IClientService
     {
         private readonly MySqlContext _context;
+        private readonly IMapper _mapper;
 
-        public ClientService(MySqlContext context)
+        public ClientService(MySqlContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<List<Client>> Findall()
+        public async Task<List<ClientDto>> Findall()
         {
-            return await _context.Clients.ToListAsync();
+            var clients = await _context.Clients.ToListAsync();
+            
+            return _mapper.Map<List<ClientDto>>(clients);
         }
         
-        public async Task<Client> FindById(int id)
+        public async Task<ClientDto> FindById(int id)
         {
-            return await _context.Clients.Where(c => c.Id == id).FirstOrDefaultAsync();            
+            var client = await _context.Clients.Where(c => c.Id == id).FirstOrDefaultAsync();
+
+            return _mapper.Map<ClientDto>(client);
         }
 
-        public async Task<Client> Update(Client client)
+        public async Task<ClientDto> Update(ClientDto client)
         {
-            _context.Clients.Update(client);
+            var cliente = _mapper.Map<Client>(client);
+            
+            _context.Clients.Update(cliente);
             await _context.SaveChangesAsync();
 
             return client;
         }
 
-        public async Task Create(Client cliente)
+        public async Task Create(ClientDto client)
         {
-            if (await _context.Clients.Where(c => c.CpfOuCnpj == cliente.CpfOuCnpj).FirstOrDefaultAsync() != null)
+            if (await _context.Clients.Where(c => c.CpfOuCnpj == client.CpfOuCnpj).FirstOrDefaultAsync() != null)
                 throw new Exception("Este CPF/CNPJ já está cadastrado para outro Cliente");
-            if (await _context.Clients.Where(c => c.Email == cliente.Email).FirstOrDefaultAsync() != null)
+            if (await _context.Clients.Where(c => c.Fone == client.Fone).FirstOrDefaultAsync() != null)
+                throw new Exception("Este telefone já está cadastrado para outro Cliente");
+            if (await _context.Clients.Where(c => c.Email == client.Email).FirstOrDefaultAsync() != null)
                 throw new Exception("Este e-mail já está cadastrado para outro Cliente");
-            if (!cliente.Insento && await _context.Clients.Where(c => c.Inscricao == cliente.Inscricao)
+            if (!client.Insento && await _context.Clients.Where(c => c.Inscricao == client.Inscricao)
                 .FirstOrDefaultAsync() != null)
                 throw new Exception("Esta Inscrição Estadual já está cadastrada para outro Cliente");
-            if (cliente.Senha != cliente.ConfirmacaoSenha)
+            if (client.Senha != client.ConfirmacaoSenha)
                 throw new Exception("Senhas não coincidem");
 
+            var cliente = _mapper.Map<Client>(client);
             _context.Add(cliente);
+
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Client>> Filter(string? nome, string? email, string? fone, DateTime? data, bool? blocked)
+        public async Task<IEnumerable<ClientDto>> Filter(string? nome, string? email, string? fone, DateTime? data, bool? blocked)
         {                    
             if(nome != null)
-                return await _context.Clients.Where(c => c.Nome == nome).ToListAsync();
+            {
+                var client = await _context.Clients.Where(c => c.Nome == nome).ToListAsync();
+                return _mapper.Map<List<ClientDto>>(client);
+            }                                           
             if(email != null)
-                return await _context.Clients.Where(c => c.Email == email).ToListAsync();
+            {                
+                var client = await _context.Clients.Where(c => c.Email == email).ToListAsync();
+                return _mapper.Map<List<ClientDto>>(client);
+            }                
             if (fone != null)
-                return await _context.Clients.Where(c => c.Fone == fone).ToListAsync();            
+            {
+                var client = await _context.Clients.Where(c => c.Fone == fone).ToListAsync();
+                return _mapper.Map<List<ClientDto>>(client);
+            }             
             if (data != null)
-                return await _context.Clients.Where(c => c.DataRegistro == data).ToListAsync();
+            {
+                var client = await _context.Clients.Where(c => c.DataRegistro == data).ToListAsync();
+                return _mapper.Map<List<ClientDto>>(client);
+            }                
             if (blocked != null)
-                return await _context.Clients.Where(c => c.ClientBlocked == blocked).ToListAsync();
+            {
+                var client = await _context.Clients.Where(c => c.ClientBlocked == blocked).ToListAsync();
+                return _mapper.Map<List<ClientDto>>(client);
+            }                
 
             throw new Exception("Cliente não encontrado");
         }
