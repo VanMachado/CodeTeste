@@ -1,8 +1,6 @@
 ﻿using CodeChallenge.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace CodeChallenge.Models
 {

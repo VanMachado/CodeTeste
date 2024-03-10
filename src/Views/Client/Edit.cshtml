@@ -1,0 +1,74 @@
+﻿@model CodeChallenge.Models.Client
+
+@{
+    ViewData["Title"] = "Editar Cliente";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Nome">Nome:</label>
+        <input asp-for="Nome" class="form-control" required />        
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">Email:</label>
+        <input asp-for="Email" class="form-control" required />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Fone">Telefone:</label>
+        <input asp-for="Fone" class="form-control" required />        
+        <span asp-validation-for="Fone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Tipo">Tipo:</label>
+        <select asp-for="Tipo" class="form-control" id="tipoSelect" disabled>
+            <option value="Fisica" selected>Física</option>
+            <option value="Juridica">Jurídica</option>
+        </select>        
+        <span asp-validation-for="Tipo" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CpfOuCnpj">CPF/CNPJ:</label>
+        <input asp-for="CpfOuCnpj" class="form-control" required />        
+        <span asp-validation-for="CpfOuCnpj" class="text-danger"></span>
+    </div>
+
+    <div id="fisicaFields" style="display:none;">        
+        <div class="form-group">
+            <label asp-for="ClientBlocked">Cliente Bloqueado:</label>
+            <input asp-for="ClientBlocked" class="form-check-input" type="checkbox" />
+            <span asp-validation-for="ClientBlocked" class="text-danger"></span>
+        </div>
+    </div>   
+
+    <input type="hidden" asp-for="DataRegistro" value="@DateTime.Today.ToString("dd-MM-yyyy")" />
+
+    <p></p>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a asp-action="Index" class="btn btn-dark">Voltar</a>
+</form>
+
+@section Scripts {
+    <script>
+        function toggleFields() {
+            var tipoSelect = document.getElementById("tipoSelect");
+            var fisicaFields = document.getElementById("fisicaFields");
+
+            if (tipoSelect.value === "Fisica") {
+                fisicaFields.style.display = "block";
+                document.getElementById("senha").setAttribute("required", "required");
+                document.getElementById("confirmacaoSenha").setAttribute("required", "required");
+            } else {
+                fisicaFields.style.display = "none";
+                document.getElementById("senha").removeAttribute("required");
+                document.getElementById("confirmacaoSenha").removeAttribute("required");
+            }
+        }
+
+        document.getElementById("tipoSelect").addEventListener("change", toggleFields);
+        window.onload = toggleFields;
+    </script>
+}

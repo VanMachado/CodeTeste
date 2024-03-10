@@ -13,11 +13,12 @@ public class ClientController : Controller
         _service = service;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? pageNumber)
     {
+        int pageSize = 20;
         var clients = await _service.Findall();
 
-        return View(clients);
+        return View(Paging<Client>.Create(clients, pageNumber ?? 1, pageSize));
     }
 
     [HttpGet]
@@ -33,6 +34,32 @@ public class ClientController : Controller
             return BadRequest();
 
         await _service.Create(client);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Filter(string? nome, string? email,
+        string? fone, DateTime? data, bool? blocked)
+    {
+        var client = await _service.Filter(nome, email, fone, data, blocked);
+
+        if (client != null)
+            return View(client);
+
+        return NotFound();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {        
+        return View(await _service.FindById(id));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit (Client client)
+    {
+        await _service.Update(client);
 
         return RedirectToAction(nameof(Index));
     }

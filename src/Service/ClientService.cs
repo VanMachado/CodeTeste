@@ -14,9 +14,22 @@ namespace CodeChallenge.Service
             _context = context;
         }
 
-        public async Task<IEnumerable<Client>> Findall()
+        public async Task<List<Client>> Findall()
         {
             return await _context.Clients.ToListAsync();
+        }
+        
+        public async Task<Client> FindById(int id)
+        {
+            return await _context.Clients.Where(c => c.Id == id).FirstOrDefaultAsync();            
+        }
+
+        public async Task<Client> Update(Client client)
+        {
+            _context.Clients.Update(client);
+            await _context.SaveChangesAsync();
+
+            return client;
         }
 
         public async Task Create(Client cliente)
@@ -33,6 +46,22 @@ namespace CodeChallenge.Service
 
             _context.Add(cliente);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Client>> Filter(string? nome, string? email, string? fone, DateTime? data, bool? blocked)
+        {                    
+            if(nome != null)
+                return await _context.Clients.Where(c => c.Nome == nome).ToListAsync();
+            if(email != null)
+                return await _context.Clients.Where(c => c.Email == email).ToListAsync();
+            if (fone != null)
+                return await _context.Clients.Where(c => c.Fone == fone).ToListAsync();            
+            if (data != null)
+                return await _context.Clients.Where(c => c.DataRegistro == data).ToListAsync();
+            if (blocked != null)
+                return await _context.Clients.Where(c => c.ClientBlocked == blocked).ToListAsync();
+
+            throw new Exception("Cliente não encontrado");
         }
     }
 }

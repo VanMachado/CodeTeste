@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Client>
+﻿@model Paging<Client>
 
 @{
     ViewData["Title"] = "Clientes";
@@ -7,8 +7,43 @@
 <h1>@ViewData["Title"]</h1>
 <div class="d-flex justify-content-between">
     <p>Consulte os seus Clientes cadastrados na sua Loja, ou realize o cadastro de novos Cliente</p>
-    <a asp-action="Details" class="btn btn-dark" style="width: 150px; display: block;">Filtrar</a>
+    <button class="btn btn-dark" style="width: 150px; display: block;" id="filterButton">Filtrar</button>
     <a asp-action="Create" class="btn btn-dark" style="width: 150px; display: block;">Adicionar Cliente</a>
+</div>
+<div id="filterContainer" style="display: none;">
+    <form id="filterForm" asp-action="Filter" method="get">
+        <input type="hidden" id="filtroSelecionado" name="filtroSelecionado" />
+        <div class="form-group">
+            <label for="filtro">Selecione o filtro:</label>
+            <select id="filtro" class="form-control">
+                <option value="">Selecione...</option>
+                <option value="Nome">Nome ou Razão Social do Cliente</option>
+                <option value="Email">E-mail do Cliente</option>
+                <option value="Fone">Telefone do Cliente</option>
+                <option value="DataCadastro">Data de Cadastro</option>
+                <option value="Bloqueado">Bloqueado</option>
+            </select>
+        </div>
+        <div id="valueInput" class="form-group" style="display: none;">
+            <label for="valor">Valor do filtro:</label>
+            <input id="valor" class="form-control" name="valor" />
+        </div>
+        <div id="dataInput" class="form-group" style="display: none;">
+            <label for="dataCadastro">Selecione uma data:</label>
+            <input type="date" class="form-control" id="dataCadastro" name="dataCadastro" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+        </div>
+        <div id="bloqueadoInput" class="form-group" style="display: none;">
+            <label for="bloqueado">Bloqueado:</label>
+            <select id="bloqueado" class="form-control" name="bloqueado">
+                <option value="">Selecione...</option>
+                <option value="True">Sim</option>
+                <option value="False">Não</option>
+            </select>
+        </div>
+        <p></p>
+        <button type="submit" class="btn btn-primary">Aplicar</button>
+        <a asp-action="Index" class="btn btn-dark">Limpar filtros</a>
+    </form>
 </div>
 <p></p>
 
@@ -16,19 +51,20 @@
     <thead>
         <tr class="table-success">
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayName("Nome ou Razão Social")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayName("Email")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Fone)
+                @Html.DisplayName("Telefone")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tipo)
+                @Html.DisplayName("Data de Cadastro")
             </th>
-            <th></th>
-            <th></th>
+            <th>
+                @Html.DisplayName("Bloqueado")
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -46,18 +82,93 @@
                     @Html.DisplayFor(modelItem => item.Fone)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Tipo)
+                    @Html.DisplayFor(modelItem => item.DataRegistro)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientBlocked)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                </td>
-                <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                </td>                
             </tr>
         }
     </tbody>
 </table>
+
+@{
+    var previDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex-1)" class="btn btn-default @previDisabled">
+    Previous
+</a> 
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex+1)" class="btn btn-default @nextDisabled">
+    Next
+</a> 
+
+@section Scripts {
+    <script>
+        document.getElementById("filterButton").addEventListener("click", function() {
+            var filterContainer = document.getElementById("filterContainer");
+            if (filterContainer.style.display === "none") {
+                filterContainer.style.display = "block";
+            } else {
+                filterContainer.style.display = "none";
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var filtro = document.getElementById("filtro");
+            var valueInput = document.getElementById("valueInput");
+            var dataInput = document.getElementById("dataInput");
+            var bloqueadoInput = document.getElementById("bloqueadoInput");
+
+            filtro.addEventListener("change", function () {
+                var selectedOption = filtro.options[filtro.selectedIndex].value;
+                document.getElementById("filtroSelecionado").value = selectedOption;
+                if (selectedOption === "DataCadastro") {
+                    valueInput.style.display = "none";
+                    dataInput.style.display = "block";
+                    bloqueadoInput.style.display = "none";
+                } else if (selectedOption === "Bloqueado") {
+                    valueInput.style.display = "none";
+                    dataInput.style.display = "none";
+                    bloqueadoInput.style.display = "block";
+                } else if (selectedOption !== "") {
+                    valueInput.style.display = "block";
+                    dataInput.style.display = "none";
+                    bloqueadoInput.style.display = "none";
+                }
+            });
+
+            var filterForm = document.getElementById("filterForm");
+
+            filterForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                var selectedOption = document.getElementById("filtroSelecionado").value;
+                var valor = document.getElementById("valor").value;
+                var dataCadastro = document.getElementById("dataCadastro").value;
+                var bloqueado = document.getElementById("bloqueado").value;
+
+                var url = "/Client/Filter?";
+                if (selectedOption === "Nome") {
+                    url += "Nome=" + valor;
+                } else if (selectedOption === "Email") {
+                    url += "Email=" + valor;
+                } else if (selectedOption === "Fone") {
+                    url += "Fone=" + valor;
+                } else if (selectedOption === "DataCadastro") {
+                    url += "Data=" + dataCadastro;
+                } else if (selectedOption === "Bloqueado") {
+                    url += "Blocked=" + bloqueado;
+                }
+
+                window.location.href = url;
+            });
+        });
+    </script>
+}
