@@ -6,7 +6,7 @@
 
 <h1>@ViewData["Title"]</h1>
 <div class="d-flex justify-content-between">
-    <p>Consulte os seus Clientes cadastrados na sua Loja, ou realize o cadastro de novos Cliente</p>
+    <p>Consulte os seus Clientes cadastrados na sua Loja, ou realize o cadastro de novos Clientes</p>
     <button class="btn btn-dark" style="width: 150px; display: block;" id="filterButton">Filtrar</button>
     <button id="editButton" class="btn btn-dark" style="width: 150px; display: block;">Editar Cliente</button>
     <a asp-action="Create" class="btn btn-dark" style="width: 150px; display: block;">Adicionar Cliente</a>
@@ -21,7 +21,7 @@
                 <option value="Nome">Nome ou Razão Social do Cliente</option>
                 <option value="Email">E-mail do Cliente</option>
                 <option value="Fone">Telefone do Cliente</option>
-                <option value="DataCadastro">Data de Cadastro</option>
+                <option value="DataCadastro">Selecione uma data ou período</option>
                 <option value="Bloqueado">Bloqueado</option>
             </select>
         </div>
@@ -31,7 +31,7 @@
         </div>
         <div id="dataInput" class="form-group" style="display: none;">
             <label for="dataCadastro">Selecione uma data:</label>
-            <input type="date" class="form-control" id="dataCadastro" name="dataCadastro" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            <input type="date" class="form-control" id="dataCadastro" name="dataCadastro" value="@DateTime.Now.ToString("dd-MM-yyyy")" />
         </div>
         <div id="bloqueadoInput" class="form-group" style="display: none;">
             <label for="bloqueado">Bloqueado:</label>
@@ -43,7 +43,7 @@
         </div>
         <p></p>
         <button type="submit" class="btn btn-primary">Aplicar</button>
-        <a asp-action="Index" class="btn btn-dark">Limpar filtros</a>
+        <a asp-action="Index" class="btn btn-dark" id="limparFiltrosButton">Limpar filtros</a>
     </form>
 </div>
 <p></p>
@@ -62,6 +62,9 @@
             </th>
             <th style="width: 15%;">
                 @Html.DisplayName("Telefone")
+            </th>
+            <th style="width: 15%;">
+                @Html.DisplayName("Tipo")
             </th>
             <th style="width: 15%;">
                 @Html.DisplayName("Data de Cadastro")
@@ -89,7 +92,10 @@
                     @Html.DisplayFor(modelItem => item.Fone)
                 </td>
                 <td style="width: 15%;">
-                    @Html.DisplayFor(modelItem => item.DataRegistro)
+                    @Html.DisplayFor(modelItem => item.Tipo)
+                </td>
+                <td style="width: 15%;">
+                    @((item.DataRegistro != null) ? item.DataRegistro.ToString("dd/MM/yyyy") : "")
                 </td>
                 <td style="width: 13%;">
                     @Html.DisplayFor(modelItem => item.ClientBlocked)
@@ -109,6 +115,12 @@
 <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex-1)" class="btn btn-default @previDisabled">
     Previous
 </a>
+
+@for (var i = 1; i <= Model.TotalPages; i++)
+{
+    <a asp-action="Index" asp-route-pageNumber="@i" class="btn btn-default @(i == Model.PageIndex ? "active" : "")">@i</a>
+}
+
 <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex+1)" class="btn btn-default @nextDisabled">
     Next
 </a>

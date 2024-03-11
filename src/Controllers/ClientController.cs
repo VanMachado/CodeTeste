@@ -2,6 +2,7 @@
 using CodeChallenge.Models.Dto;
 using CodeChallenge.Service.IService;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 public class ClientController : Controller
 {
@@ -31,24 +32,40 @@ public class ClientController : Controller
     [HttpPost]
     public async Task<ActionResult<Client>> Create(ClientDto client)
     {
-        if (client == null)
-            return BadRequest();
+        try
+        {
+            if (client == null)
+                return BadRequest();
 
-        await _service.Create(client);
+            await _service.Create(client);
 
-        return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            var errorViewModel = new ErrorViewModel { ErrorMessage = ex.Message };
+            return View("Error", errorViewModel);
+        }
     }
 
     [HttpGet]
     public async Task<IActionResult> Filter(string? nome, string? email,
         string? fone, DateTime? data, bool? blocked)
     {
-        var client = await _service.Filter(nome, email, fone, data, blocked);
+        try
+        {
+            var client = await _service.Filter(nome, email, fone, data, blocked);
 
-        if (client != null)
-            return View(client);
+            if (client != null)
+                return View(client);
 
-        return NotFound();
+            return NotFound();
+        }
+        catch(Exception ex)
+        {
+            var errorViewModel = new ErrorViewModel { ErrorMessage = ex.Message };
+            return View("Error", errorViewModel);
+        }
     }
 
     [HttpGet]

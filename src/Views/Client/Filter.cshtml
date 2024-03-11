@@ -40,8 +40,8 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DataRegistro)
+                    <td style="width: 15%;">
+                        @((item.DataRegistro != null) ? item.DataRegistro.ToString("dd/MM/yyyy") : "")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.CpfOuCnpj)

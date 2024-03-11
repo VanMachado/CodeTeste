@@ -11,7 +11,7 @@ namespace CodeChallenge.Models.Dto
         public DateTime DataRegistro { get; set; }        
         public TipoDto Tipo { get; set; }        
         public string CpfOuCnpj { get; set; }
-        public bool Insento { get; set; }
+        public bool Isento { get; set; }
         public string? Inscricao { get; set; }
         public GeneroDto? Genero { get; set; }
         public DateTime? DataNascimento { get; set; }

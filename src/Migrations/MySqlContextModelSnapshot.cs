@@ -57,7 +57,7 @@ namespace CodeChallenge.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("varchar(12)");
 
-                    b.Property<bool>("Insento")
+                    b.Property<bool>("Isento")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Nome")

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeChallenge.Migrations
 {
     [DbContext(typeof(MySqlContext))]
-    [Migration("20240309174745_FirstMigration")]
+    [Migration("20240311171333_FirstMigration")]
     partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace CodeChallenge.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("varchar(12)");
 
-                    b.Property<bool>("Insento")
+                    b.Property<bool>("Isento")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Nome")

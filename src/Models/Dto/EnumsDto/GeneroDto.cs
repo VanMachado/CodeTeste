@@ -2,7 +2,8 @@
 {
     public enum GeneroDto : int
     {
-        Masculino = 0,
-        Feminino = 1
+        Feminino = 0,
+        Masculino = 1,
+        Outro = 2
     }
 }

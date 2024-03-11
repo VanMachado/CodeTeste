@@ -2,6 +2,7 @@
 using CodeChallenge.Data;
 using CodeChallenge.Models;
 using CodeChallenge.Models.Dto;
+using CodeChallenge.Models.Dto.EnumsDto;
 using CodeChallenge.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,14 +49,20 @@ namespace CodeChallenge.Service
                 throw new Exception("Este CPF/CNPJ já está cadastrado para outro Cliente");
             if (await _context.Clients.Where(c => c.Fone == client.Fone).FirstOrDefaultAsync() != null)
                 throw new Exception("Este telefone já está cadastrado para outro Cliente");
+            if (client.CpfOuCnpj.Length > 11 && client.Tipo == TipoDto.Fisica)
+                throw new Exception("Insira um numero de CPF válido");
+            if (client.CpfOuCnpj.Length < 14 && client.Tipo == TipoDto.Juridica)
+                throw new Exception("Insira um numero de CNPJ válido");
             if (await _context.Clients.Where(c => c.Email == client.Email).FirstOrDefaultAsync() != null)
                 throw new Exception("Este e-mail já está cadastrado para outro Cliente");
-            if (!client.Insento && await _context.Clients.Where(c => c.Inscricao == client.Inscricao)
+            if (!client.Isento && client.Inscricao == null)
+                throw new Exception("Preencha a Inscrição Estadual");
+            if (!client.Isento && await _context.Clients.Where(c => c.Inscricao == client.Inscricao)
                 .FirstOrDefaultAsync() != null)
                 throw new Exception("Esta Inscrição Estadual já está cadastrada para outro Cliente");
             if (client.Senha != client.ConfirmacaoSenha)
                 throw new Exception("Senhas não coincidem");
-
+            
             var cliente = _mapper.Map<Client>(client);
             _context.Add(cliente);
 

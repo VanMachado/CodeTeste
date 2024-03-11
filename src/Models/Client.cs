@@ -20,11 +20,12 @@ namespace CodeChallenge.Models
         public Tipo Tipo { get; set; }
         [Required]
         public string CpfOuCnpj { get; set; }
-        public bool Insento { get; set; }
+        public bool Isento { get; set; }
         public string? Inscricao { get; set; }
         public Genero? Genero { get; set; }
         public DateTime? DataNascimento { get; set; }
         public bool ClientBlocked { get; set; }
+        [StringLength(12, ErrorMessage = "A senha deve ter entre 8 e 12 caracteres!", MinimumLength = 8)]
         public string? Senha { get; set; }        
         [NotMapped]
         public string? ConfirmacaoSenha { get; set; }
@@ -34,7 +35,7 @@ namespace CodeChallenge.Models
         }
 
         public Client(string nome, string email, string fone, Tipo tipo,
-            string cpfOuCnpj, bool insento, string inscricao)
+            string cpfOuCnpj, bool isento, string inscricao)
         {
             Nome = nome;
             Email = email;
@@ -42,13 +43,13 @@ namespace CodeChallenge.Models
             DataRegistro = DateTime.Now;
             Tipo = tipo;
             CpfOuCnpj = cpfOuCnpj;
-            Insento = insento;
+            Isento = isento;
             Inscricao = inscricao;
             ClientBlocked = false;
         }
 
         public Client(string nome, string email, string fone, Tipo tipo,
-            string cpfOuCnpj, bool insento)
+            string cpfOuCnpj, bool isento)
         {
             Nome = nome;
             Email = email;
@@ -56,12 +57,12 @@ namespace CodeChallenge.Models
             DataRegistro = DateTime.Now;
             Tipo = tipo;
             CpfOuCnpj = cpfOuCnpj;
-            Insento = insento;
+            Isento = isento;
             ClientBlocked = false;
         }
 
         public Client(string nome, string email, string fone, Tipo tipo,
-            string cpfOuCnpj, bool insento, Genero? genero, DateTime? dataNascimento,
+            string cpfOuCnpj, bool isento, Genero? genero, DateTime? dataNascimento,
             bool clientBlocked, string senha)
         {
             Nome = nome;
@@ -70,7 +71,7 @@ namespace CodeChallenge.Models
             DataRegistro = DateTime.Now;
             Tipo = tipo;
             CpfOuCnpj = cpfOuCnpj;
-            Insento = insento;
+            Isento = isento;
             Genero = genero;
             DataNascimento = dataNascimento;
             ClientBlocked = clientBlocked;                        
@@ -78,7 +79,7 @@ namespace CodeChallenge.Models
         }
 
         public Client(string nome, string email, string fone, Tipo tipo,
-            string cpfOuCnpj, bool insento, string inscricao, Genero? genero,
+            string cpfOuCnpj, bool isento, string inscricao, Genero? genero,
             DateTime? dataNascimento, bool clientBlocked, string senha)
         {
             Nome = nome;
@@ -87,7 +88,7 @@ namespace CodeChallenge.Models
             DataRegistro = DateTime.Now;
             Tipo = tipo;
             CpfOuCnpj = cpfOuCnpj;
-            Insento = insento;
+            Isento = isento;
             Inscricao = inscricao;
             Genero = genero;
             DataNascimento = dataNascimento;

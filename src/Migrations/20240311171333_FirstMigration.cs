@@ -29,7 +29,7 @@ namespace CodeChallenge.Migrations
                     Tipo = table.Column<int>(type: "int", nullable: false),
                     CpfOuCnpj = table.Column<string>(type: "varchar(14)", maxLength: 14, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Insento = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Isento = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Inscricao = table.Column<string>(type: "varchar(12)", maxLength: 12, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Genero = table.Column<int>(type: "int", nullable: true),
