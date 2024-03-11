@@ -20,7 +20,7 @@
     </div>
     <div class="form-group">
         <label asp-for="Fone">Telefone:</label>
-        <input asp-for="Fone" class="form-control" required />
+        <input asp-for="Fone" class="form-control phone-mask" required />
         <span class="text-danger">*</span>
         <span asp-validation-for="Fone" class="text-danger"></span>
     </div>
@@ -35,7 +35,7 @@
     </div>
     <div class="form-group">
         <label asp-for="CpfOuCnpj">CPF/CNPJ:</label>
-        <input asp-for="CpfOuCnpj" class="form-control" required />
+        <input asp-for="CpfOuCnpj" class="form-control cpf-cnpj-mask" required />
         <span class="text-danger">*</span>
         <span asp-validation-for="CpfOuCnpj" class="text-danger"></span>
     </div>
@@ -90,36 +90,57 @@
     <a asp-action="Index" class="btn btn-dark">Voltar</a>
 </form>
 
-<script>
-    function toggleFields() {
-        var tipoSelect = document.getElementById("tipoSelect");
-        var generoGroup = document.getElementById("generoGroup");
-        var dataNascimentoGroup = document.getElementById("dataNascimentoGroup");
-        var clientBlockedGroup = document.getElementById("clientBlockedGroup");
-        var senhaGroup = document.getElementById("senhaGroup");
-        var confirmacaoSenhaGroup = document.getElementById("confirmacaoSenhaGroup");
+@section Scripts {
+    <script>
+        function toggleFields() {
+            var tipoSelect = document.getElementById("tipoSelect");
+            var generoGroup = document.getElementById("generoGroup");
+            var dataNascimentoGroup = document.getElementById("dataNascimentoGroup");
+            var clientBlockedGroup = document.getElementById("clientBlockedGroup");
+            var senhaGroup = document.getElementById("senhaGroup");
+            var confirmacaoSenhaGroup = document.getElementById("confirmacaoSenhaGroup");
 
-        if (tipoSelect.value === "Fisica") {
-            generoGroup.style.display = "block";
-            dataNascimentoGroup.style.display = "block";
-            clientBlockedGroup.style.display = "block";
-            senhaGroup.style.display = "block";
-            confirmacaoSenhaGroup.style.display = "block";
+            if (tipoSelect.value === "Fisica") {
+                generoGroup.style.display = "block";
+                dataNascimentoGroup.style.display = "block";
+                clientBlockedGroup.style.display = "block";
+                senhaGroup.style.display = "block";
+                confirmacaoSenhaGroup.style.display = "block";
 
-            document.getElementById("senha").setAttribute("required", "required");
-            document.getElementById("confirmacaoSenha").setAttribute("required", "required");
-        } else {
-            generoGroup.style.display = "none";
-            dataNascimentoGroup.style.display = "none";
-            clientBlockedGroup.style.display = "none";
-            senhaGroup.style.display = "none";
-            confirmacaoSenhaGroup.style.display = "none";
+                document.getElementById("senha").setAttribute("required", "required");
+                document.getElementById("confirmacaoSenha").setAttribute("required", "required");
+            } else {
+                generoGroup.style.display = "none";
+                dataNascimentoGroup.style.display = "none";
+                clientBlockedGroup.style.display = "none";
+                senhaGroup.style.display = "none";
+                confirmacaoSenhaGroup.style.display = "none";
 
-            document.getElementById("senha").removeAttribute("required");
-            document.getElementById("confirmacaoSenha").removeAttribute("required");
+                document.getElementById("senha").removeAttribute("required");
+                document.getElementById("confirmacaoSenha").removeAttribute("required");
+            }
         }
-    }
 
-    document.getElementById("tipoSelect").addEventListener("change", toggleFields);
-    window.onload = toggleFields;
-</script>
+        document.getElementById("tipoSelect").addEventListener("change", toggleFields);
+        window.onload = toggleFields;
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('.phone-mask').inputmask('(99) 99999-9999');
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.phone-mask').inputmask('(99) 99999-9999');
+            $('.cpf-cnpj-mask').inputmask({
+                mask: ['999.999.999-99', '99.999.999/9999-99'],
+                keepStatic: true,
+                placeholder: ''
+            });
+        });
+    </script>
+}
