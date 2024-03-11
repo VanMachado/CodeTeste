@@ -40,7 +40,7 @@ namespace CodeChallenge.Models
             Nome = nome;
             Email = email;
             Fone = fone;
-            DataRegistro = DateTime.Now;
+            DataRegistro = DateTime.Today;
             Tipo = tipo;
             CpfOuCnpj = cpfOuCnpj;
             Isento = isento;
@@ -54,7 +54,7 @@ namespace CodeChallenge.Models
             Nome = nome;
             Email = email;
             Fone = fone;
-            DataRegistro = DateTime.Now;
+            DataRegistro = DateTime.Today;
             Tipo = tipo;
             CpfOuCnpj = cpfOuCnpj;
             Isento = isento;
@@ -68,7 +68,7 @@ namespace CodeChallenge.Models
             Nome = nome;
             Email = email;
             Fone = fone;
-            DataRegistro = DateTime.Now;
+            DataRegistro = DateTime.Today;
             Tipo = tipo;
             CpfOuCnpj = cpfOuCnpj;
             Isento = isento;
@@ -85,7 +85,7 @@ namespace CodeChallenge.Models
             Nome = nome;
             Email = email;
             Fone = fone;
-            DataRegistro = DateTime.Now;
+            DataRegistro = DateTime.Today;
             Tipo = tipo;
             CpfOuCnpj = cpfOuCnpj;
             Isento = isento;

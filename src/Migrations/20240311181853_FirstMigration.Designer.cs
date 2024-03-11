@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeChallenge.Migrations
 {
     [DbContext(typeof(MySqlContext))]
-    [Migration("20240311171333_FirstMigration")]
+    [Migration("20240311181853_FirstMigration")]
     partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
