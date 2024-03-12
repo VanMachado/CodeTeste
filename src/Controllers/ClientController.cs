@@ -1,8 +1,10 @@
 ﻿using CodeChallenge.Models;
 using CodeChallenge.Models.Dto;
 using CodeChallenge.Service.IService;
+using CodeChallenge.Utils;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 public class ClientController : Controller
 {
@@ -15,29 +17,34 @@ public class ClientController : Controller
         _service = service;
     }
 
+    [Authorize(Roles = Role.Admin)]
     public async Task<IActionResult> Index(int? pageNumber)
     {
         int pageSize = 20;
-        var clients = await _service.Findall();
+        var token = await HttpContext.GetTokenAsync("access_token");
+        var clients = await _service.Findall(token);
 
         return View(Paging<ClientDto>.Create(clients, pageNumber ?? 1, pageSize));
     }
 
     [HttpGet]
+    [Authorize(Roles = Role.Admin)]
     public async Task<IActionResult> Create()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize(Roles = Role.Admin)]
     public async Task<ActionResult<Client>> Create(ClientDto client)
     {
+        var token = await HttpContext.GetTokenAsync("access_token");
         try
         {
             if (client == null)
                 return BadRequest();
 
-            await _service.Create(client);
+            await _service.Create(client, token);
 
             return RedirectToAction(nameof(Index));
         }
@@ -49,12 +56,14 @@ public class ClientController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = Role.Admin)]
     public async Task<IActionResult> Filter(string? nome, string? email,
         string? fone, DateTime? data, bool? blocked)
     {
+        var token = await HttpContext.GetTokenAsync("access_token");
         try
         {
-            var client = await _service.Filter(nome, email, fone, data, blocked);
+            var client = await _service.Filter(nome, email, fone, data, blocked, token);
 
             if (client != null)
                 return View(client);
@@ -69,15 +78,20 @@ public class ClientController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = Role.Admin)]
     public async Task<IActionResult> Edit(int id)
-    {        
-        return View(await _service.FindById(id));
+    {
+        var token = await HttpContext.GetTokenAsync("access_token");
+
+        return View(await _service.FindById(id, token));
     }
 
     [HttpPost]
+    [Authorize(Roles = Role.Admin)]
     public async Task<IActionResult> Edit (ClientDto client)
     {
-        await _service.Update(client);
+        var token = await HttpContext.GetTokenAsync("access_token");
+        await _service.Update(client, token);
 
         return RedirectToAction(nameof(Index));
     }

@@ -5,36 +5,42 @@ using CodeChallenge.Models.Dto;
 using CodeChallenge.Models.Dto.EnumsDto;
 using CodeChallenge.Service.IService;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 
 namespace CodeChallenge.Service
 {
     public class ClientService : IClientService
     {
         private readonly MySqlContext _context;
+        private readonly HttpClient _client;
         private readonly IMapper _mapper;
 
-        public ClientService(MySqlContext context, IMapper mapper)
+        public ClientService(MySqlContext context, HttpClient client, IMapper mapper)
         {
             _context = context;
+            _client = client;
             _mapper = mapper;
         }
 
-        public async Task<List<ClientDto>> Findall()
+        public async Task<List<ClientDto>> Findall(string token)
         {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var clients = await _context.Clients.ToListAsync();
             
             return _mapper.Map<List<ClientDto>>(clients);
         }
         
-        public async Task<ClientDto> FindById(int id)
+        public async Task<ClientDto> FindById(int id, string token)
         {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var client = await _context.Clients.Where(c => c.Id == id).FirstOrDefaultAsync();
 
             return _mapper.Map<ClientDto>(client);
         }
 
-        public async Task<ClientDto> Update(ClientDto client)
+        public async Task<ClientDto> Update(ClientDto client, string token)
         {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var cliente = _mapper.Map<Client>(client);
             
             _context.Clients.Update(cliente);
@@ -43,8 +49,10 @@ namespace CodeChallenge.Service
             return client;
         }
 
-        public async Task Create(ClientDto client)
+        public async Task Create(ClientDto client, string token)
         {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             if (await _context.Clients.Where(c => c.CpfOuCnpj == client.CpfOuCnpj).FirstOrDefaultAsync() != null)
                 throw new Exception("Este CPF/CNPJ já está cadastrado para outro Cliente");
             if (await _context.Clients.Where(c => c.Fone == client.Fone).FirstOrDefaultAsync() != null)
@@ -69,9 +77,12 @@ namespace CodeChallenge.Service
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ClientDto>> Filter(string? nome, string? email, string? fone, DateTime? data, bool? blocked)
-        {                    
-            if(nome != null)
+        public async Task<IEnumerable<ClientDto>> Filter(string? nome, string? email, string? fone, 
+            DateTime? data, bool? blocked, string token)
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            
+            if (nome != null)
             {
                 var client = await _context.Clients.Where(c => c.Nome == nome).ToListAsync();
                 return _mapper.Map<List<ClientDto>>(client);

@@ -2,7 +2,6 @@
 
 Este é um projeto que utiliza uma imagem padrão do MySQL através do Docker para criar um banco de dados. O projeto foi desenvolvido em .NET 6 e possui instruções para baixar as dependências necessárias e configurar o banco de dados.
 
-
 ## Configuração do Banco de Dados
 
 Para baixar a imagem padrão do MySQL, execute o seguinte comando:
@@ -38,5 +37,26 @@ Para aplicar as mudanças no banco de dados, execute:
 
 
 Antes de iniciar o programa, certifique-se de criar o banco de dados "clients" juntamente com as tabelas. Isso pode ser feito com o comando mencionado anteriormente para evitar o erro 500, pois o "SeedingService" é responsável por fazer a população do banco de dados.
+
+### Autenticação
+
+Caso queira testar a funcionalidade de autenticação, use:
+`git checkout authentication`
+
+
+
+Para garantir que tem o template do Duende instalado
+`dotnet new --install Duende.IdentityServer.Templates`
+
+
+
+Na pasta do IdentityServer rode
+`dotnet ef update database`
+
+
+
+Use o login de administrador "admin" com senha "Senha123$" para poder acessar as abas de clientes e prosseguir com os testes
+
+
 
 
