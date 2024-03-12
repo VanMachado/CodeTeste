@@ -41,7 +41,7 @@ Antes de iniciar o programa, certifique-se de criar o banco de dados "clients" j
 ### Autenticação
 
 Caso queira testar a funcionalidade de autenticação, use:
-`git checkout authentication`
+`git checkout authorization`
 
 
 
@@ -55,8 +55,12 @@ Na pasta do IdentityServer rode
 
 
 
+Selecione ambos os projetos para startarem juntos
+
+
+
 Use o login de administrador "admin" com senha "Senha123$" para poder acessar as abas de clientes e prosseguir com os testes
 
 
 
-
+Essa branch adiciona essa camada de segurança visando boas práticas de mercado.
